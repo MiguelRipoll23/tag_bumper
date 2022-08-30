@@ -1,0 +1,25 @@
+name: Questions & Answers
+description: Get an answer
+labels: [question]
+assignees:
+  - MiguelRipoll23
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to learn about this module!
+  - type: input
+    id: module-version
+    attributes:
+      label: Module version
+      description: Installed version of the module
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: what-question
+    attributes:
+      label: What's your question?
+      description: A description of the question using your use case and expected behavior
+    validations:
+      required: true

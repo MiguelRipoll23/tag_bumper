@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "deno",
+      "command": "run",
+      "args": [
+        "--unstable",
+        "--allow-all",
+        "--allow-read",
+        "main.ts"
+      ],
+      "problemMatcher": [
+        "$deno"
+      ],
+      "label": "bump"
+    }
+  ]
+}

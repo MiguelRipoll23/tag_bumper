@@ -1,0 +1,31 @@
+name: Bug Report
+description: File a bug report
+labels: [bug]
+assignees:
+  - MiguelRipoll23
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Module version
+      description: Installed version of the module
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A description of the bug found plus the steps to reproduce the issue
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: bash

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true
+  },
+  "fmt": {
+    "files": {
+      "exclude": [
+        ".git"
+      ]
+    }
+  },
+  "tasks": {
+    "run": "deno run --unstable --allow-run --allow-read --watch main.ts",
+    "compile": "deno compile --unstable --allow-run --allow-read --output bump main.ts",
+    "fmt": "deno fmt",
+    "lint": "deno lint"
+  }
+}
