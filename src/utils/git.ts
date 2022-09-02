@@ -16,6 +16,15 @@ async function getStatus() {
     throw new Error(errorOutput);
   }
 
+  // Branch
+  let branch = constants.TEXT_UNKNOWN;
+  let branchIndex = output.indexOf(constants.GIT_ON_BRANCH);
+
+  if (branchIndex > -1) {
+    const lineBreakIndex = output.indexOf("\n", branchIndex);
+    branch = output.substring(constants.GIT_ON_BRANCH.length, lineBreakIndex);
+  }
+
   // Staged
   let staged = false;
 
@@ -38,10 +47,28 @@ async function getStatus() {
   }
 
   return {
+    branch,
     staged,
     remote,
     updated,
   };
+}
+
+function getDefaultBranches() {
+  const defaultBranches = [
+    constants.GIT_MAIN,
+    constants.GIT_MASTER,
+  ];
+
+  const envDefaultBranches = Deno.env.get(constants.ENV_DEFAULT_BRANCHES);
+
+  if (envDefaultBranches === undefined) {
+    return defaultBranches;
+  }
+
+  const extraDefaultBranches = envDefaultBranches.split(constants.TEXT_COMMA);
+
+  return defaultBranches.concat(extraDefaultBranches);
 }
 
 async function getLatestTagFromRemote() {
@@ -205,6 +232,7 @@ async function pushTag() {
 export {
   createCommit,
   createTag,
+  getDefaultBranches,
   getLatestTagFromLocal,
   getLatestTagFromRemote,
   getStatus,

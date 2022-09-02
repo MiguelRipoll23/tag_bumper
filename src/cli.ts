@@ -8,7 +8,7 @@ import * as files from "./utils/files.ts";
 
 export async function start() {
   // Get status
-  const { staged, remote, updated } = await git.getStatus();
+  const { branch, staged, remote, updated } = await git.getStatus();
 
   exitIfChangesUnstaged(staged);
   exitIfBranchOutdated(updated);
@@ -20,7 +20,7 @@ export async function start() {
   printTagName(tagName, kind, remoteError);
 
   // Ask kind
-  const newKind = await askVersionKind(kind);
+  const newKind = await askVersionKind(branch, kind);
 
   // Ask bump
   const newTagName = await askVersionBump(
@@ -126,27 +126,36 @@ function printTagName(
   console.info(constants.TEXT_EMPTY);
 }
 
-async function askVersionKind(kind: string) {
+function isDefaultBranch(branch: string) {
+  return git.getDefaultBranches().includes(branch);
+}
+
+async function askVersionKind(branch: string, kind: string) {
+  const options: SelectValueOptions = [
+    {
+      name: `${constants.EMOJI_BETA} ${constants.TEXT_BETA}`,
+      value: constants.TEXT_BETA,
+    },
+    {
+      name: `${constants.EMOJI_ALPHA} ${constants.TEXT_ALPHA}`,
+      value: constants.TEXT_ALPHA,
+    },
+    {
+      name: `${constants.EMOJI_CUSTOM} ${constants.TEXT_CUSTOM}`,
+      value: constants.TEXT_CUSTOM,
+    },
+  ];
+
+  if (isDefaultBranch(branch)) {
+    options.unshift({
+      name: `${constants.EMOJI_STABLE} ${constants.TEXT_STABLE}`,
+      value: constants.TEXT_STABLE,
+    });
+  }
+
   let userKind = await Select.prompt({
     message: constants.TEXT_PICK_VERSION_KIND,
-    options: [
-      {
-        name: `${constants.EMOJI_STABLE} ${constants.TEXT_STABLE}`,
-        value: constants.TEXT_STABLE,
-      },
-      {
-        name: `${constants.EMOJI_BETA} ${constants.TEXT_BETA}`,
-        value: constants.TEXT_BETA,
-      },
-      {
-        name: `${constants.EMOJI_ALPHA} ${constants.TEXT_ALPHA}`,
-        value: constants.TEXT_ALPHA,
-      },
-      {
-        name: `${constants.EMOJI_CUSTOM} ${constants.TEXT_CUSTOM}`,
-        value: constants.TEXT_CUSTOM,
-      },
-    ],
+    options,
   });
 
   if (userKind === constants.TEXT_CUSTOM) {
@@ -168,7 +177,7 @@ async function askVersionBump(
   const minorVersion = version.getMinor(tagName, newKind);
   const patchVersion = version.getPatch(tagName, newKind);
 
-  const bumpOptions: SelectValueOptions = [
+  const options: SelectValueOptions = [
     {
       name: `${constants.EMOJI_MAJOR} ${constants.TEXT_MAJOR} (${
         colors.bold.yellow(majorVersion)
@@ -190,7 +199,7 @@ async function askVersionBump(
   ];
 
   addExtraOptionsIfNecessary(
-    bumpOptions,
+    options,
     tagName,
     kind,
     newKind,
@@ -198,7 +207,7 @@ async function askVersionBump(
 
   return await Select.prompt({
     message: constants.TEXT_PICK_VERSION_BUMP,
-    options: bumpOptions,
+    options,
   });
 }
 

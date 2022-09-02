@@ -1,8 +1,14 @@
 // Exit codes
 export const EXIT_ERROR = -1;
 
+// Configuration
+export const ENV_DEFAULT_BRANCHES = "DEFAULT_BRANCHES";
+
 // Git
 export const GIT_INITIAL_TAG_NAME = "0.0.1-alpha.0";
+
+export const GIT_MAIN = "main";
+export const GIT_MASTER = "master";
 
 export const GIT_COMMAND = "git";
 export const GIT_COMMAND_ARGUMENT_STATUS = "status";
@@ -12,6 +18,7 @@ export const GIT_COMMAND_ARGUMENT_UNTRACKED_FILES_NO = "--untracked-files=no";
 export const GIT_COMMAND_ARGUMENT_LS_REMOTE = "ls-remote";
 export const GIT_COMMAND_ARGUMENT_SORT_DESC_V_REFNAME = "--sort=-v:refname";
 export const GIT_COMMAND_ARGUMENT_ORIGIN = "origin";
+export const GIT_ON_BRANCH = "On branch ";
 
 export const GIT_COMMAND_ARGUMENT_DESCRIBE = "describe";
 export const GIT_COMMAND_ARGUMENT_TAGS = "--tags";
@@ -38,6 +45,7 @@ export const GIT_BRANCH_UP_TO_DATE = "branch is up to date";
 export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
   "fatal: No names found, cannot describe anything.";
 
+// Version
 export const VERSION_PREFIX = "v";
 
 export const PACKAGE_JSON_FILENAME = "package.json";
@@ -71,6 +79,7 @@ export const EMOJI_PATCH = "🐛";
 // Text
 export const TEXT_EMPTY = "";
 export const TEXT_WHITESPACE = " ";
+export const TEXT_COMMA = ",";
 export const TEXT_UNKNOWN = "unknown";
 export const TEXT_LOCAL = "(local)";
 export const TEXT_LATEST_TAG = "Latest tag:";
