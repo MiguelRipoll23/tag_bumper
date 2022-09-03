@@ -13,6 +13,9 @@ export async function start() {
   exitIfChangesUnstaged(staged);
   exitIfBranchOutdated(updated);
 
+  // Pull changes
+  await pullRepositoryIfUpstream(remote);
+
   // Get tag
   const { tagName, remoteError } = await getLatestTagAndSource(remote);
   const kind = version.getKind(tagName);
@@ -77,6 +80,16 @@ function exitIfBranchOutdated(updated: boolean) {
   );
 
   Deno.exit(constants.EXIT_ERROR);
+}
+
+async function pullRepositoryIfUpstream(remote: boolean) {
+  if (remote === false) {
+    return;
+  }
+
+  await git.pullRepository();
+
+  console.info(constants.TEXT_EMPTY);
 }
 
 async function getLatestTagAndSource(remote: boolean) {
