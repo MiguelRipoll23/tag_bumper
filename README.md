@@ -19,8 +19,8 @@ deno install --unstable --allow-env=DEFAULT_BRANCHES --allow-run=git,npm,npm.cmd
 - Use custom prerelease identifiers provided by you or regular ones like alpha
   and beta
 
-- Create a branch, update and commit version files (package.json, pom.xml)
-  automatically
+- Create a branch, update and commit version files (version.ts, package.json,
+  pom.xml) automatically
 
 ## Demo
 
