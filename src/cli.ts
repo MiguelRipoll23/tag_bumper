@@ -105,7 +105,6 @@ async function getLatestTagAndSource(remote: boolean) {
   }
 
   const localTag = await git.getLatestTagFromLocal();
-
   result.tagName = localTag;
 
   return result;

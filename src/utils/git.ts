@@ -78,30 +78,23 @@ async function getLatestTagFromRemote() {
     throw new Error(errorOutput);
   }
 
-  const outputLines = output.split("\n");
-
-  for (const outputLine of outputLines) {
-    const [sha, ref] = outputLine.split("\t");
-
-    if (sha === undefined || ref === undefined) {
-      continue;
-    }
-
-    if (ref.startsWith(constants.GIT_TAGS_PREFIX) === false) {
-      continue;
-    }
-
-    let tag = ref.replace(constants.GIT_TAGS_PREFIX, constants.TEXT_EMPTY);
-
-    tag = tag.replace(
-      constants.GIT_TAGS_SUFFIX,
-      constants.TEXT_EMPTY,
-    );
-
-    return tag;
+  if (output.length === 0) {
+    throw new Error(constants.TEXT_ERROR_NO_TAGS_FOUND);
   }
 
-  throw new Error(constants.TEXT_ERROR_NO_TAGS_FOUND);
+  // Parse tag
+  const outputLines = output.split(constants.TEXT_NEW_LINE);
+  const outputLine = outputLines[0];
+  const [sha, ref] = outputLine.split(constants.TEXT_TAB);
+
+  let tag = ref.replace(constants.GIT_TAGS_PREFIX, constants.TEXT_EMPTY);
+
+  tag = tag.replace(
+    constants.GIT_TAGS_SUFFIX,
+    constants.TEXT_EMPTY,
+  );
+
+  return tag;
 }
 
 async function getLatestTagFromLocal() {
