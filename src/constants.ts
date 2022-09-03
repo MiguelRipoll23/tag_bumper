@@ -12,7 +12,6 @@ export const GIT_TAGS_PREFIX = "refs/tags/";
 export const GIT_TAGS_SUFFIX = "^{}";
 export const GIT_CHANGES_NOT_STAGED = "Changes not staged for commit";
 export const GIT_ORIGIN = "origin";
-export const GIT_BRANCH_UP_TO_DATE = "branch is up to date";
 export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
   "fatal: No names found, cannot describe anything.";
 
@@ -79,8 +78,8 @@ export const EMOJI_PATCH = "🐛";
 
 // Text
 export const TEXT_EMPTY = "";
-export const TEXT_WHITESPACE = " ";
 export const TEXT_COMMA = ",";
+export const TEXT_NEW_LINE = "\n";
 export const TEXT_UNKNOWN = "unknown";
 export const TEXT_LOCAL = "(local)";
 export const TEXT_LATEST_TAG = "Latest tag:";
@@ -103,6 +102,3 @@ export const TEXT_ERROR_NO_TAGS_FOUND = "No tags found";
 
 export const TEXT_ERROR_CHANGES_UNSTAGED =
   "Changes unstaged, commit your local changes";
-
-export const TEXT_ERROR_BRANCH_OUTDATED =
-  "Branch outdated, update your current branch";
