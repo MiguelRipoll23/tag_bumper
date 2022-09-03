@@ -13,7 +13,7 @@ export async function start() {
   exitIfChangesUnstaged(staged);
 
   // Pull changes
-  await pullRepositoryIfUpstream(remote);
+  await pullBranchIfUpstream(remote);
 
   // Get tag
   const { tagName, remoteError } = await getLatestTagAndSource(remote);
@@ -69,12 +69,12 @@ function exitIfChangesUnstaged(staged: boolean) {
   Deno.exit(constants.EXIT_ERROR);
 }
 
-async function pullRepositoryIfUpstream(remote: boolean) {
+async function pullBranchIfUpstream(remote: boolean) {
   if (remote === false) {
     return;
   }
 
-  let output = await git.pullRepository();
+  let output = await git.pullBranch();
   output = output.toLowerCase();
 
   if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {

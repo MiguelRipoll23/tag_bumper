@@ -17,8 +17,8 @@ async function runCommand(
   return { code, output, errorOutput };
 }
 
-function printErrorMessage(code: number, output: string, errorOutput: string) {
-  const errorMessage = code === 1 ? output : errorOutput;
+function printErrorMessage(output: string, errorOutput: string) {
+  const errorMessage = output.length > 0 ? output : errorOutput;
   console.error(`${constants.EMOJI_ERROR} ${colors.bold.red(errorMessage)}`);
 }
 
