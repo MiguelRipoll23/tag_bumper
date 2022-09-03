@@ -83,6 +83,7 @@ export const EMOJI_PATCH = "🐛";
 // Text
 export const TEXT_EMPTY = "";
 export const TEXT_COMMA = ",";
+export const TEXT_TAB = "\t";
 export const TEXT_NEW_LINE = "\n";
 export const TEXT_UNKNOWN = "unknown";
 export const TEXT_LOCAL = "(local)";
@@ -102,7 +103,7 @@ export const TEXT_CONFIRM_TAG_NAME = "Confirm tag name";
 
 export const TEXT_CONFIRM_TAG_PUSH = "Confirm tag push";
 
-export const TEXT_LOCAL_BRANCH_UPDATED = "updated local branch";
+export const TEXT_LOCAL_BRANCH_UPDATED = "local branch updated";
 
 export const TEXT_ERROR_NO_TAGS_FOUND = "No tags found";
 
