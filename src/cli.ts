@@ -74,9 +74,16 @@ async function pullRepositoryIfUpstream(remote: boolean) {
     return;
   }
 
-  await git.pullRepository();
+  let output = await git.pullRepository();
+  output = output.toLowerCase();
 
-  console.info(constants.TEXT_EMPTY);
+  if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {
+    return;
+  }
+
+  console.info(
+    `${constants.EMOJI_TASK} ${constants.TEXT_LOCAL_BRANCH_UPDATED}`,
+  );
 }
 
 async function getLatestTagAndSource(remote: boolean) {
@@ -225,10 +232,8 @@ async function updateVersionFilesIfExists(
   remoteError: boolean,
 ) {
   // Check if changes pending
-  const { staged, updated } = await git.getStatus();
-
+  const { staged } = await git.getStatus();
   exitIfChangesUnstaged(staged);
-  exitIfBranchOutdated(updated);
 
   newTagName = newTagName.replace(/^v/, constants.TEXT_EMPTY);
 

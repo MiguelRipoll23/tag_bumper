@@ -47,15 +47,16 @@ async function getStatus() {
 }
 
 async function pullRepository() {
-  const { code, errorOutput } = await runCommand(
+  const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
     [
       constants.GIT_COMMAND_ARGUMENT_PULL,
+      constants.GIT_COMMAND_ARGUMENT_VERBOSE,
     ],
   );
 
   if (code === 0) {
-    return;
+    return output.trim();
   }
 
   console.error(`${constants.EMOJI_ERROR} ${colors.bold.red(errorOutput)}`);
