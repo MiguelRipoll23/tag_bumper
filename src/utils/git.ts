@@ -18,10 +18,10 @@ async function getStatus() {
 
   // Branch
   let branch = constants.TEXT_UNKNOWN;
-  let branchIndex = output.indexOf(constants.GIT_ON_BRANCH);
+  const branchIndex = output.indexOf(constants.GIT_ON_BRANCH);
 
   if (branchIndex > -1) {
-    const lineBreakIndex = output.indexOf("\n", branchIndex);
+    const lineBreakIndex = output.indexOf(constants.TEXT_NEW_LINE, branchIndex);
     branch = output.substring(constants.GIT_ON_BRANCH.length, lineBreakIndex);
   }
 
@@ -39,18 +39,10 @@ async function getStatus() {
     remote = true;
   }
 
-  // Updated
-  let updated = false;
-
-  if (remote === false || output.includes(constants.GIT_BRANCH_UP_TO_DATE)) {
-    updated = true;
-  }
-
   return {
     branch,
     staged,
     remote,
-    updated,
   };
 }
 

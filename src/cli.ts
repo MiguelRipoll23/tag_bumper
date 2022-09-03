@@ -8,10 +8,9 @@ import * as files from "./utils/files.ts";
 
 export async function start() {
   // Get status
-  const { branch, staged, remote, updated } = await git.getStatus();
+  const { branch, staged, remote } = await git.getStatus();
 
   exitIfChangesUnstaged(staged);
-  exitIfBranchOutdated(updated);
 
   // Pull changes
   await pullRepositoryIfUpstream(remote);
@@ -65,18 +64,6 @@ function exitIfChangesUnstaged(staged: boolean) {
 
   console.error(
     colors.bold.red(constants.TEXT_ERROR_CHANGES_UNSTAGED),
-  );
-
-  Deno.exit(constants.EXIT_ERROR);
-}
-
-function exitIfBranchOutdated(updated: boolean) {
-  if (updated) {
-    return;
-  }
-
-  console.error(
-    colors.bold.red(constants.TEXT_ERROR_BRANCH_OUTDATED),
   );
 
   Deno.exit(constants.EXIT_ERROR);
