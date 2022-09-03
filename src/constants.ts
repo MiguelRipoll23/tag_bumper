@@ -5,15 +5,16 @@ export const EXIT_ERROR = -1;
 export const ENV_DEFAULT_BRANCHES = "DEFAULT_BRANCHES";
 
 // Git
-export const GIT_INITIAL_TAG_NAME = "0.0.1-alpha.0";
-
 export const GIT_MAIN = "main";
 export const GIT_MASTER = "master";
+export const GIT_INITIAL_TAG_NAME = "0.0.1-alpha.0";
 
 export const GIT_COMMAND = "git";
-export const GIT_COMMAND_ARGUMENT_STATUS = "status";
 
+export const GIT_COMMAND_ARGUMENT_STATUS = "status";
 export const GIT_COMMAND_ARGUMENT_UNTRACKED_FILES_NO = "--untracked-files=no";
+
+export const GIT_COMMAND_ARGUMENT_PULL = "pull";
 
 export const GIT_COMMAND_ARGUMENT_LS_REMOTE = "ls-remote";
 export const GIT_COMMAND_ARGUMENT_SORT_DESC_V_REFNAME = "--sort=-v:refname";
@@ -47,15 +48,16 @@ export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
 
 // Version
 export const VERSION_PREFIX = "v";
-
 export const PACKAGE_JSON_FILENAME = "package.json";
 export const POM_XML_FILENAME = "pom.xml";
 
 export const NPM_COMMAND = "npm";
+
 export const NPM_COMMAND_ARGUMENT_VERSION = "version";
 export const NPM_COMMAND_ARGUMENT_NO_GIT_TAG_VERSION = "--no-git-tag-version";
 
 export const MVN_COMMAND = "mvn";
+
 export const MVN_COMMAND_ARGUMENT_VERSIONS_SET = "versions:set";
 export const MVN_COMMAND_ARGUMENT_D_NEW_VERSION = "-DnewVersion=";
 

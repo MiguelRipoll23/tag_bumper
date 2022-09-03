@@ -54,6 +54,22 @@ async function getStatus() {
   };
 }
 
+async function pullRepository() {
+  const { code, errorOutput } = await runCommand(
+    constants.GIT_COMMAND,
+    [
+      constants.GIT_COMMAND_ARGUMENT_PULL,
+    ],
+  );
+
+  if (code === 0) {
+    return;
+  }
+
+  console.error(`${constants.EMOJI_ERROR} ${colors.bold.red(errorOutput)}`);
+  Deno.exit(1);
+}
+
 function getDefaultBranches() {
   const defaultBranches = [
     constants.GIT_MAIN,
@@ -237,6 +253,7 @@ export {
   getLatestTagFromRemote,
   getStatus,
   prepareCommit,
+  pullRepository,
   pushCommit,
   pushTag,
   switchToNewBranch,
