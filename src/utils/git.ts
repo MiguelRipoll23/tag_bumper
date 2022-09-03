@@ -12,7 +12,7 @@ async function getStatus() {
   );
 
   if (code !== 0) {
-    printErrorMessage(code, output, errorOutput);
+    printErrorMessage(output, errorOutput);
     Deno.exit(constants.EXIT_ERROR);
   }
 
@@ -46,7 +46,7 @@ async function getStatus() {
   };
 }
 
-async function pullRepository() {
+async function pullBranch() {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
     [
@@ -59,7 +59,7 @@ async function pullRepository() {
     return output.trim();
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -128,7 +128,7 @@ async function getLatestTagFromLocal() {
     return constants.GIT_INITIAL_TAG_NAME;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -163,7 +163,7 @@ async function switchToNewBranch(tagName: string) {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -180,7 +180,7 @@ async function prepareCommit() {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -198,7 +198,7 @@ async function createCommit(targetVersion: string) {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -217,7 +217,7 @@ async function pushCommit(tagName: string) {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -234,7 +234,7 @@ async function createTag(tagName: string) {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
 }
 
@@ -252,7 +252,7 @@ async function pushTag() {
     return;
   }
 
-  printErrorMessage(code, output, errorOutput);
+  printErrorMessage(output, errorOutput);
 }
 
 export {
@@ -263,7 +263,7 @@ export {
   getLatestTagFromRemote,
   getStatus,
   prepareCommit,
-  pullRepository,
+  pullBranch,
   pushCommit,
   pushTag,
   switchToNewBranch,
