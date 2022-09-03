@@ -70,23 +70,6 @@ async function pullRepository() {
   Deno.exit(1);
 }
 
-function getDefaultBranches() {
-  const defaultBranches = [
-    constants.GIT_MAIN,
-    constants.GIT_MASTER,
-  ];
-
-  const envDefaultBranches = Deno.env.get(constants.ENV_DEFAULT_BRANCHES);
-
-  if (envDefaultBranches === undefined) {
-    return defaultBranches;
-  }
-
-  const extraDefaultBranches = envDefaultBranches.split(constants.TEXT_COMMA);
-
-  return defaultBranches.concat(extraDefaultBranches);
-}
-
 async function getLatestTagFromRemote() {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
@@ -152,6 +135,23 @@ async function getLatestTagFromLocal() {
 
   console.error(`${constants.EMOJI_ERROR} ${colors.bold.red(errorOutput)}`);
   Deno.exit(1);
+}
+
+function getDefaultBranches() {
+  const defaultBranches = [
+    constants.GIT_MAIN,
+    constants.GIT_MASTER,
+  ];
+
+  const envDefaultBranches = Deno.env.get(constants.ENV_DEFAULT_BRANCHES);
+
+  if (envDefaultBranches === undefined) {
+    return defaultBranches;
+  }
+
+  const extraDefaultBranches = envDefaultBranches.split(constants.TEXT_COMMA);
+
+  return defaultBranches.concat(extraDefaultBranches);
 }
 
 async function switchToNewBranch(tagName: string) {

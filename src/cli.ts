@@ -13,12 +13,12 @@ export async function start() {
   exitIfChangesUnstaged(staged);
   exitIfBranchOutdated(updated);
 
-  // Pull changes
-  await pullRepositoryIfUpstream(remote);
-
   // Get tag
   const { tagName, remoteError } = await getLatestTagAndSource(remote);
   const kind = version.getKind(tagName);
+
+  // Pull changes
+  await pullRepositoryIfUpstream(remote);
 
   printTagName(tagName, kind, remoteError);
 
@@ -88,8 +88,6 @@ async function pullRepositoryIfUpstream(remote: boolean) {
   }
 
   await git.pullRepository();
-
-  console.info(constants.TEXT_EMPTY);
 }
 
 async function getLatestTagAndSource(remote: boolean) {
@@ -139,10 +137,6 @@ function printTagName(
   console.info(constants.TEXT_EMPTY);
 }
 
-function isDefaultBranch(branch: string) {
-  return git.getDefaultBranches().includes(branch);
-}
-
 async function askVersionKind(branch: string, kind: string) {
   const options: SelectValueOptions = [
     {
@@ -159,7 +153,9 @@ async function askVersionKind(branch: string, kind: string) {
     },
   ];
 
-  if (isDefaultBranch(branch)) {
+  const isDefaultBranch = git.getDefaultBranches().includes(branch);
+
+  if (isDefaultBranch) {
     options.unshift({
       name: `${constants.EMOJI_STABLE} ${constants.TEXT_STABLE}`,
       value: constants.TEXT_STABLE,

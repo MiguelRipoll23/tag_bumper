@@ -8,6 +8,13 @@ export const ENV_DEFAULT_BRANCHES = "DEFAULT_BRANCHES";
 export const GIT_MAIN = "main";
 export const GIT_MASTER = "master";
 export const GIT_INITIAL_TAG_NAME = "0.0.1-alpha.0";
+export const GIT_TAGS_PREFIX = "refs/tags/";
+export const GIT_TAGS_SUFFIX = "^{}";
+export const GIT_CHANGES_NOT_STAGED = "Changes not staged for commit";
+export const GIT_ORIGIN = "origin";
+export const GIT_BRANCH_UP_TO_DATE = "branch is up to date";
+export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
+  "fatal: No names found, cannot describe anything.";
 
 export const GIT_COMMAND = "git";
 
@@ -36,15 +43,6 @@ export const GIT_COMMAND_ARGUMENT_TAG = "tag";
 
 export const GIT_COMMAND_ARGUMENT_PUSH = "push";
 export const GIT_COMMAND_ARGUMENT_SET_UPSTREAM = "--set-upstream";
-
-export const GIT_TAGS_PREFIX = "refs/tags/";
-export const GIT_TAGS_SUFFIX = "^{}";
-
-export const GIT_CHANGES_NOT_STAGED = "Changes not staged for commit";
-export const GIT_ORIGIN = "origin";
-export const GIT_BRANCH_UP_TO_DATE = "branch is up to date";
-export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
-  "fatal: No names found, cannot describe anything.";
 
 // Version
 export const VERSION_PREFIX = "v";
