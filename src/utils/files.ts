@@ -11,13 +11,31 @@ async function doesFileExist(fileName: string): Promise<boolean> {
   }
 }
 
-async function updateVersionFiles(newTagName: string) {
+async function updateVersionFiles(tagName: string, newTagName: string) {
   let filesUpdated = 0;
 
+  filesUpdated += await updateVersionTsIfExists(tagName, newTagName);
   filesUpdated += await updatePackageJsonIfExists(newTagName);
   filesUpdated += await updatePomFileIfExists(newTagName);
 
   return filesUpdated;
+}
+
+async function updateVersionTsIfExists(tagName: string, newTagName: string) {
+  let changed = 0;
+
+  const isDeno = await doesFileExist(constants.VERSION_TS_FILENAME);
+
+  if (isDeno === false) {
+    return changed;
+  }
+
+  let versionContent = await Deno.readTextFile(constants.VERSION_TS_FILENAME);
+  versionContent = versionContent.replaceAll(tagName, newTagName);
+
+  await Deno.writeTextFile(constants.VERSION_TS_FILENAME, versionContent);
+
+  return changed;
 }
 
 async function updatePackageJsonIfExists(newTagName: string) {

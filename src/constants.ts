@@ -46,6 +46,7 @@ export const GIT_COMMAND_ARGUMENT_SET_UPSTREAM = "--set-upstream";
 
 // Version
 export const VERSION_PREFIX = "v";
+export const VERSION_TS_FILENAME = "version.ts";
 export const PACKAGE_JSON_FILENAME = "package.json";
 export const POM_XML_FILENAME = "pom.xml";
 

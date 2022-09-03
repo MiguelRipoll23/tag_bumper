@@ -13,12 +13,12 @@ export async function start() {
   exitIfChangesUnstaged(staged);
   exitIfBranchOutdated(updated);
 
+  // Pull changes
+  await pullRepositoryIfUpstream(remote);
+
   // Get tag
   const { tagName, remoteError } = await getLatestTagAndSource(remote);
   const kind = version.getKind(tagName);
-
-  // Pull changes
-  await pullRepositoryIfUpstream(remote);
 
   printTagName(tagName, kind, remoteError);
 
@@ -41,7 +41,7 @@ export async function start() {
   }
 
   // Update version files
-  await updateVersionFilesIfExists(newTagName, remoteError);
+  await updateVersionFilesIfExists(tagName, newTagName, remoteError);
 
   // Create tag
   await git.createTag(newTagName);
@@ -88,6 +88,8 @@ async function pullRepositoryIfUpstream(remote: boolean) {
   }
 
   await git.pullRepository();
+
+  console.info(constants.TEXT_EMPTY);
 }
 
 async function getLatestTagAndSource(remote: boolean) {
@@ -231,6 +233,7 @@ async function confirmTagName(newTagName: string) {
 }
 
 async function updateVersionFilesIfExists(
+  tagName: string,
   newTagName: string,
   remoteError: boolean,
 ) {
@@ -242,7 +245,7 @@ async function updateVersionFilesIfExists(
 
   newTagName = newTagName.replace(/^v/, constants.TEXT_EMPTY);
 
-  const filesChanged = await files.updateVersionFiles(newTagName);
+  const filesChanged = await files.updateVersionFiles(tagName, newTagName);
 
   if (filesChanged > 0) {
     await git.switchToNewBranch(newTagName);
