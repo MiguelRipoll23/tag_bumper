@@ -22,12 +22,10 @@ async function updateVersionFiles(tagName: string, newTagName: string) {
 }
 
 async function updateVersionTsIfExists(tagName: string, newTagName: string) {
-  let changed = 0;
-
   const isDeno = await doesFileExist(constants.VERSION_TS_FILENAME);
 
   if (isDeno === false) {
-    return changed;
+    return 0;
   }
 
   let versionContent = await Deno.readTextFile(constants.VERSION_TS_FILENAME);
@@ -35,7 +33,7 @@ async function updateVersionTsIfExists(tagName: string, newTagName: string) {
 
   await Deno.writeTextFile(constants.VERSION_TS_FILENAME, versionContent);
 
-  return changed;
+  return 1;
 }
 
 async function updatePackageJsonIfExists(newTagName: string) {
