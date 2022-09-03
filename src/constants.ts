@@ -36,7 +36,7 @@ export const GIT_COMMAND_ARGUMENT_ADD = "add";
 export const GIT_COMMAND_ARGUMENT_ADD_FILENAMES = ".";
 
 export const GIT_COMMAND_ARGUMENT_SWITCH = "switch";
-export const GIT_COMMAND_ARGUMENT_CREATE = "--create";
+export const GIT_COMMAND_ARGUMENT_FORCE_CREATE = "--force-create";
 
 export const GIT_COMMAND_ARGUMENT_COMMIT = "commit";
 export const GIT_COMMAND_ARGUMENT_MESSAGE = "--message";

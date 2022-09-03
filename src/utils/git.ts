@@ -150,7 +150,7 @@ function getDefaultBranches() {
 async function switchToNewBranch(tagName: string) {
   const { code, errorOutput } = await runCommand(constants.GIT_COMMAND, [
     constants.GIT_COMMAND_ARGUMENT_SWITCH,
-    constants.GIT_COMMAND_ARGUMENT_CREATE,
+    constants.GIT_COMMAND_ARGUMENT_FORCE_CREATE,
     constants.VERSION_PREFIX + tagName,
   ]);
 
