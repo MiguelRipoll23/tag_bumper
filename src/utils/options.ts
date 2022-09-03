@@ -9,11 +9,20 @@ function addExtraOptionsIfNecessary(
   currentKind: string,
   targetKind: string,
 ) {
-  if (targetKind === constants.TEXT_STABLE) {
-    if (currentKind === constants.TEXT_STABLE) {
-      return;
-    }
+  addNoneOptionIfNecessary(currentKind, targetKind, options, tagName);
+  addPrereleaseOptionIfNecessary(currentKind, targetKind, options, tagName);
+}
 
+function addNoneOptionIfNecessary(
+  currentKind: string,
+  targetKind: string,
+  options: SelectValueOptions,
+  tagName: string,
+) {
+  const isCurrentKindStable = currentKind === constants.TEXT_STABLE;
+  const isTargetKindStable = targetKind === constants.TEXT_STABLE;
+
+  if (isCurrentKindStable === false && isTargetKindStable) {
     const versionWithoutPrerelease = version.getWithoutPrerelease(
       tagName,
     );
@@ -24,11 +33,19 @@ function addExtraOptionsIfNecessary(
       })`,
       value: versionWithoutPrerelease,
     });
-  } else {
-    if (currentKind !== targetKind) {
-      return;
-    }
+  }
+}
 
+function addPrereleaseOptionIfNecessary(
+  currentKind: string,
+  targetKind: string,
+  options: SelectValueOptions,
+  tagName: string,
+) {
+  const isCurrentAndTargetKindEqual = currentKind === targetKind;
+  const isTargetKindStable = targetKind === constants.TEXT_STABLE;
+
+  if (isCurrentAndTargetKindEqual && isTargetKindStable === false) {
     const prereleaseVersion = version.getPrerelease(tagName, targetKind);
 
     options.unshift({
