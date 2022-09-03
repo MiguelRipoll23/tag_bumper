@@ -7,7 +7,7 @@ Easily bump tags in your Git repository using the bump command.
 ## Installation
 
 ```bash
-deno install --unstable --allow-env --allow-run --allow-read -n bump https://deno.land/x/tag_bumper/main.ts
+deno install --unstable --allow-env=DEFAULT_BRANCHES --allow-run=git,npm,npm.cmd,mvn,mvn.cmd --allow-read=version.ts,package.json,pom.xml --allow-write=version.ts -n bump https://deno.land/x/tag_bumper/main.ts
 ```
 
 ## Features
