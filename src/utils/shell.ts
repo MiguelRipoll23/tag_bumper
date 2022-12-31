@@ -2,14 +2,18 @@ import { colors } from "../../deps.ts";
 import * as constants from "../constants.ts";
 
 async function runCommand(
-  command: string,
-  args: string[] = [],
+  commandName: string,
+  commandArguments: string[] = [],
 ) {
-  console.info(constants.EMOJI_SHELL, command, ...args);
+  console.info(constants.EMOJI_SHELL, commandName, ...commandArguments);
 
-  const { code, stdout, stderr } = await Deno.spawn(command, {
-    args,
+  const command = new Deno.Command(commandName, {
+    args: commandArguments,
+    stdout: "piped",
+    stderr: "piped",
   });
+
+  const { code, stdout, stderr } = await command.output();
 
   const output = new TextDecoder().decode(stdout).trim();
   const errorOutput = new TextDecoder().decode(stderr).trim();
