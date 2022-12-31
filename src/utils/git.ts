@@ -85,7 +85,7 @@ async function getLatestTagFromRemote() {
   // Parse tag
   const outputLines = output.split(constants.TEXT_NEW_LINE);
   const outputLine = outputLines[0];
-  const [sha, ref] = outputLine.split(constants.TEXT_TAB);
+  const [_sha, ref] = outputLine.split(constants.TEXT_TAB);
 
   let tag = ref.replace(constants.GIT_TAGS_PREFIX, constants.TEXT_EMPTY);
 
