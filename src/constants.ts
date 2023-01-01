@@ -6,13 +6,15 @@ export const ARG_DEFAULT_BRANCH = "default-branch";
 
 // Git
 export const GIT_MAIN = "main";
-export const GIT_MASTER = "master";
 export const GIT_INITIAL_TAG_NAME = "0.0.1-alpha.0";
 export const GIT_TAGS_PREFIX = "refs/tags/";
 export const GIT_TAGS_SUFFIX = "^{}";
 export const GIT_CHANGES_NOT_STAGED = "Changes not staged for commit";
 export const GIT_ALREADY_UP_TO_DATE = "already up to date";
 export const GIT_ORIGIN = "origin";
+export const GIT_ERROR_NO_SUCH_REF_WAS_FETCHED = "no such ref was fetched";
+export const GIT_ERROR_NO_MATCH_KNOWN =
+  "did not match any file(s) known to git";
 export const GIT_ERROR_NO_NAMES_FOUND_CANNOT_DESCRIBE_ANYTHING =
   "fatal: No names found, cannot describe anything.";
 
@@ -23,6 +25,7 @@ export const GIT_COMMAND_ARGUMENT_UNTRACKED_FILES_NO = "--untracked-files=no";
 
 export const GIT_COMMAND_ARGUMENT_PULL = "pull";
 export const GIT_COMMAND_ARGUMENT_VERBOSE = "--verbose";
+export const GIT_COMMAND_ARGUMENT_CHECKOUT = "checkout";
 
 export const GIT_COMMAND_ARGUMENT_LS_REMOTE = "ls-remote";
 export const GIT_COMMAND_ARGUMENT_SORT_DESC_V_REFNAME = "--sort=-v:refname";
@@ -66,8 +69,10 @@ export const WINDOWS_COMMAND_BAT_SUFFIX = ".bat";
 
 // Emoji
 export const EMOJI_MESSAGE = "💬";
-export const EMOJI_TASK = "✨";
-export const EMOJI_ERROR = "❗";
+export const EMOJI_TASK = "🟢";
+export const EMOJI_INFORMATION = "🟡";
+export const EMOJI_WARNING = "🟠";
+export const EMOJI_ERROR = "🔴";
 export const EMOJI_SHELL = "🐚";
 export const EMOJI_UNKNOWN = "🔨";
 export const EMOJI_STABLE = "🚀";
@@ -103,9 +108,10 @@ export const TEXT_CONFIRM_TAG_NAME = "Confirm tag name";
 
 export const TEXT_CONFIRM_TAG_PUSH = "Confirm tag push";
 
+export const TEXT_LOCAL_BRANCH_NOT_FOUND = "local branch not found";
+export const TEXT_REMOTE_BRANCH_NOT_FOUND = "remote branch not found";
 export const TEXT_LOCAL_BRANCH_UPDATED = "local branch updated";
-
-export const TEXT_ERROR_NO_TAGS_FOUND = "No tags found";
-
+export const TEXT_CURRENT_BRANCH_UPDATED = "current branch updated";
+export const TEXT_ERROR_NO_TAGS_FOUND = "no tags found";
 export const TEXT_ERROR_CHANGES_UNSTAGED =
-  "Changes unstaged, commit your local changes";
+  "changes unstaged, commit your local changes";

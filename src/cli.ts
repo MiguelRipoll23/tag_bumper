@@ -24,7 +24,7 @@ export async function start() {
   exitIfChangesUnstaged(staged);
 
   // Pull changes
-  await pullBranchIfUpstream(remote);
+  await pullBranchIfUpstream(remote, defaultBranch);
 
   // Get tag
   const { tagName, remoteError } = await getLatestTagAndSource(remote);
@@ -83,18 +83,22 @@ function exitIfChangesUnstaged(staged: boolean) {
   }
 
   console.error(
+    constants.EMOJI_ERROR,
     colors.bold.red(constants.TEXT_ERROR_CHANGES_UNSTAGED),
   );
 
   Deno.exit(constants.EXIT_ERROR);
 }
 
-async function pullBranchIfUpstream(remote: boolean) {
+async function pullBranchIfUpstream(
+  remote: boolean,
+  defaultBranch: string | null,
+) {
   if (remote === false) {
     return;
   }
 
-  let output = await git.pullBranch();
+  let output = await git.pullBranch(defaultBranch);
   output = output.toLowerCase();
 
   if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {
