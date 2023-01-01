@@ -2,7 +2,7 @@
 export const EXIT_ERROR = -1;
 
 // Configuration
-export const ENV_DEFAULT_BRANCHES = "DEFAULT_BRANCHES";
+export const ARG_DEFAULT_BRANCH = "default-branch";
 
 // Git
 export const GIT_MAIN = "main";

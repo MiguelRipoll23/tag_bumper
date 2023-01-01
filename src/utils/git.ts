@@ -125,21 +125,12 @@ async function getLatestTagFromLocal() {
   Deno.exit(constants.EXIT_ERROR);
 }
 
-function getDefaultBranches() {
-  const defaultBranches = [
-    constants.GIT_MAIN,
-    constants.GIT_MASTER,
-  ];
-
-  const envDefaultBranches = Deno.env.get(constants.ENV_DEFAULT_BRANCHES);
-
-  if (envDefaultBranches === undefined) {
-    return defaultBranches;
+function isDefaultBranch(branch: string, defaultBranch: string | null) {
+  if (defaultBranch === null) {
+    return branch === constants.GIT_MAIN;
   }
 
-  const extraDefaultBranches = envDefaultBranches.split(constants.TEXT_COMMA);
-
-  return defaultBranches.concat(extraDefaultBranches);
+  return branch === defaultBranch;
 }
 
 async function switchToNewBranch(tagName: string) {
@@ -251,10 +242,10 @@ async function pushTag() {
 export {
   createCommit,
   createTag,
-  getDefaultBranches,
   getLatestTagFromLocal,
   getLatestTagFromRemote,
   getStatus,
+  isDefaultBranch,
   prepareCommit,
   pullBranch,
   pushCommit,
