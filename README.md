@@ -34,7 +34,7 @@ inside your `.vscode` directory:
 ```json
 {
   "type": "shell",
-  "command": "bump",
+  "command": "bump --default-branch=main",
   "label": "bump"
 }
 ```

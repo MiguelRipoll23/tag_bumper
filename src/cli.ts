@@ -1,4 +1,12 @@
-import { colors, Confirm, Input, Select, SelectValueOptions } from "../deps.ts";
+import {
+  colors,
+  Confirm,
+  Input,
+  parse,
+  Select,
+  SelectValueOptions,
+} from "../deps.ts";
+
 import { addExtraOptionsIfNecessary } from "./utils/options.ts";
 
 import * as constants from "./constants.ts";
@@ -7,6 +15,9 @@ import * as version from "./utils/version.ts";
 import * as files from "./utils/files.ts";
 
 export async function start() {
+  // Flags
+  const { "default-branch": defaultBranch } = parseFlags();
+
   // Get status
   const { branch, staged, remote } = await git.getStatus();
 
@@ -22,7 +33,7 @@ export async function start() {
   printTagName(tagName, kind, remoteError);
 
   // Ask kind
-  const newKind = await askVersionKind(branch, kind);
+  const newKind = await askVersionKind(branch, kind, defaultBranch);
 
   // Ask bump
   const newTagName = await askVersionBump(
@@ -55,6 +66,15 @@ export async function start() {
   if (tagPushConfirmed) {
     await git.pushTag();
   }
+}
+
+function parseFlags() {
+  return parse(Deno.args, {
+    string: [constants.ARG_DEFAULT_BRANCH],
+    default: {
+      "default-branch": null,
+    },
+  });
 }
 
 function exitIfChangesUnstaged(staged: boolean) {
@@ -132,7 +152,11 @@ function printTagName(
   console.info(constants.TEXT_EMPTY);
 }
 
-async function askVersionKind(branch: string, kind: string) {
+async function askVersionKind(
+  branch: string,
+  kind: string,
+  defaultBranch: string | null,
+) {
   const options: SelectValueOptions = [
     {
       name: `${constants.EMOJI_BETA} ${constants.TEXT_BETA}`,
@@ -148,7 +172,7 @@ async function askVersionKind(branch: string, kind: string) {
     },
   ];
 
-  const isDefaultBranch = git.getDefaultBranches().includes(branch);
+  const isDefaultBranch = git.isDefaultBranch(branch, defaultBranch);
 
   if (isDefaultBranch) {
     options.unshift({
