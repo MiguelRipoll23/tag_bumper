@@ -46,7 +46,7 @@ async function getStatus() {
   };
 }
 
-async function pullBranch() {
+async function pullBranch(defaultBranch: string | null) {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
     [
@@ -57,6 +57,49 @@ async function pullBranch() {
 
   if (code === 0) {
     return output.trim();
+  }
+
+  // Switch to default branch
+  // if current branch is deleted
+  if (errorOutput.includes(constants.GIT_ERROR_NO_SUCH_REF_WAS_FETCHED)) {
+    console.warn(
+      `${constants.EMOJI_WARNING} ${constants.TEXT_REMOTE_BRANCH_NOT_FOUND}`,
+    );
+
+    await switchToDefaultBranch(defaultBranch);
+
+    console.info(
+      `${constants.EMOJI_TASK} ${constants.TEXT_CURRENT_BRANCH_UPDATED}`,
+    );
+
+    Deno.exit(constants.EXIT_ERROR);
+  }
+
+  printErrorMessage(output, errorOutput);
+  Deno.exit(constants.EXIT_ERROR);
+}
+
+async function switchToDefaultBranch(defaultBranch: string | null) {
+  const branchName = getDefaultBranch(defaultBranch);
+
+  const { code, output, errorOutput } = await runCommand(
+    constants.GIT_COMMAND,
+    [
+      constants.GIT_COMMAND_ARGUMENT_CHECKOUT,
+      branchName,
+    ],
+  );
+
+  if (code === 0) {
+    return;
+  }
+
+  if (errorOutput.includes(constants.GIT_ERROR_NO_MATCH_KNOWN)) {
+    console.warn(
+      `${constants.EMOJI_WARNING} ${constants.TEXT_LOCAL_BRANCH_NOT_FOUND}`,
+    );
+
+    Deno.exit(constants.EXIT_ERROR);
   }
 
   printErrorMessage(output, errorOutput);
@@ -123,6 +166,14 @@ async function getLatestTagFromLocal() {
 
   printErrorMessage(output, errorOutput);
   Deno.exit(constants.EXIT_ERROR);
+}
+
+function getDefaultBranch(defaultBranch: string | null) {
+  if (defaultBranch === null) {
+    return constants.GIT_MAIN;
+  }
+
+  return defaultBranch;
 }
 
 function isDefaultBranch(branch: string, defaultBranch: string | null) {
