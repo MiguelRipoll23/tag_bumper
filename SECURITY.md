@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-Please email findings to miguelripoll23@outlook.com.
+Please report any findings using GitHub.
