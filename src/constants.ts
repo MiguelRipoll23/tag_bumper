@@ -112,6 +112,8 @@ export const TEXT_LOCAL_BRANCH_NOT_FOUND = "local branch not found";
 export const TEXT_REMOTE_BRANCH_NOT_FOUND = "remote branch not found";
 export const TEXT_LOCAL_BRANCH_UPDATED = "local branch updated";
 export const TEXT_CURRENT_BRANCH_UPDATED = "current branch updated";
+export const TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION =
+  "merge branch before tag creation";
 export const TEXT_ERROR_NO_TAGS_FOUND = "no tags found";
 export const TEXT_ERROR_CHANGES_UNSTAGED =
   "changes unstaged, commit your local changes";
