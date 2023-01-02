@@ -306,6 +306,10 @@ async function updateVersionFilesIfExists(
     if (remoteError === false) {
       await git.pushCommit(newTagName);
     }
+
+    console.info(
+      `${constants.EMOJI_INFORMATION} ${constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION}`,
+    );
   }
 }
 
