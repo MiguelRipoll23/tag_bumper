@@ -13,6 +13,7 @@ import * as constants from "./constants.ts";
 import * as git from "./utils/git.ts";
 import * as version from "./utils/version.ts";
 import * as files from "./utils/files.ts";
+import { printErrorMessage } from "./utils/shell.ts";
 
 export async function start() {
   // Flags
@@ -98,16 +99,46 @@ async function pullBranchIfUpstream(
     return;
   }
 
-  let output = await git.pullBranch(defaultBranch);
-  output = output.toLowerCase();
+  try {
+    let output = await git.pullBranch();
+    output = output.toLowerCase();
 
-  if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {
+    if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {
+      return;
+    }
+
+    console.info(
+      `${constants.EMOJI_TASK} ${constants.TEXT_LOCAL_BRANCH_UPDATED}`,
+    );
+  } catch (errorOutput) {
+    await switchBranchIfRemoteBranchNotFound(
+      errorOutput.message,
+      defaultBranch,
+    );
+    Deno.exit(constants.EXIT_ERROR);
+  }
+}
+
+async function switchBranchIfRemoteBranchNotFound(
+  errorOutput: string,
+  defaultBranch: string | null,
+) {
+  // Remote branch not found
+  if (errorOutput.includes(constants.GIT_ERROR_NO_SUCH_REF_WAS_FETCHED)) {
+    console.warn(
+      `${constants.EMOJI_WARNING} ${constants.TEXT_REMOTE_BRANCH_NOT_FOUND}`,
+    );
+
+    await git.switchToDefaultBranch(defaultBranch);
+
+    console.info(
+      `${constants.EMOJI_TASK} ${constants.TEXT_CURRENT_BRANCH_UPDATED}`,
+    );
+
     return;
   }
 
-  console.info(
-    `${constants.EMOJI_TASK} ${constants.TEXT_LOCAL_BRANCH_UPDATED}`,
-  );
+  printErrorMessage(constants.TEXT_EMPTY, errorOutput);
 }
 
 async function getLatestTagAndSource(remote: boolean) {
