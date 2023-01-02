@@ -46,7 +46,7 @@ async function getStatus() {
   };
 }
 
-async function pullBranch(defaultBranch: string | null) {
+async function pullBranch() {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
     [
@@ -59,24 +59,7 @@ async function pullBranch(defaultBranch: string | null) {
     return output.trim();
   }
 
-  // Switch to default branch
-  // if current branch is deleted
-  if (errorOutput.includes(constants.GIT_ERROR_NO_SUCH_REF_WAS_FETCHED)) {
-    console.warn(
-      `${constants.EMOJI_WARNING} ${constants.TEXT_REMOTE_BRANCH_NOT_FOUND}`,
-    );
-
-    await switchToDefaultBranch(defaultBranch);
-
-    console.info(
-      `${constants.EMOJI_TASK} ${constants.TEXT_CURRENT_BRANCH_UPDATED}`,
-    );
-
-    Deno.exit(constants.EXIT_ERROR);
-  }
-
-  printErrorMessage(output, errorOutput);
-  Deno.exit(constants.EXIT_ERROR);
+  throw new Error(errorOutput);
 }
 
 async function switchToDefaultBranch(defaultBranch: string | null) {
@@ -301,5 +284,6 @@ export {
   pullBranch,
   pushCommit,
   pushTag,
+  switchToDefaultBranch,
   switchToNewBranch,
 };
