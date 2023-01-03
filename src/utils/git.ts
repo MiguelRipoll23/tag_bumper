@@ -57,7 +57,11 @@ async function pullBranch() {
   );
 
   if (code === 0) {
-    return output.trim();
+    if (output.toLowerCase().includes(constants.GIT_ALREADY_UP_TO_DATE)) {
+      return;
+    }
+
+    log.task(constants.TEXT_LOCAL_BRANCH_UPDATED);
   }
 
   throw new Error(errorOutput);
@@ -75,6 +79,7 @@ async function checkoutDefaultBranch(defaultBranch: string | null) {
   );
 
   if (code === 0) {
+    log.task(constants.TEXT_CHANGED_CURRENT_BRANCH);
     return;
   }
 

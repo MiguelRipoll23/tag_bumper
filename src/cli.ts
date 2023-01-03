@@ -116,15 +116,7 @@ async function pullOrCheckoutDefaultBranch(defaultBranch: string | null) {
   let ok = false;
 
   try {
-    let output = await git.pullBranch();
-    output = output.toLowerCase();
-
-    if (output.includes(constants.GIT_ALREADY_UP_TO_DATE)) {
-      return;
-    }
-
-    log.task(constants.TEXT_LOCAL_BRANCH_UPDATED);
-
+    await git.pullBranch();
     ok = true;
   } catch (error) {
     const { message } = error;
@@ -312,9 +304,11 @@ async function updateVersionFilesIfExists(
 
   await git.prepareCommit();
   await git.createCommit(newTagName);
+  log.task(constants.TEXT_VERSION_BRANCH_COMMITTED);
 
   if (local === false) {
     await git.pushCommit(newTagName);
+    log.task(constants.TEXT_VERSION_BRANCH_PUSHED);
   }
 
   return filesChanged;
@@ -336,7 +330,7 @@ async function mergeOrPullBranch(
     return true;
   }
 
-  log.info(constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION);
+  log.warn(constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION);
   console.info(constants.TEXT_EMPTY);
 
   ok = await Confirm.prompt(

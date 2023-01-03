@@ -73,7 +73,6 @@ export const WINDOWS_COMMAND_CMD_SUFFIX = ".cmd";
 export const WINDOWS_COMMAND_BAT_SUFFIX = ".bat";
 
 // Emoji
-export const EMOJI_MESSAGE = "💬";
 export const EMOJI_TASK = "🟢";
 export const EMOJI_INFORMATION = "🟣";
 export const EMOJI_WARNING = "🟡";
@@ -119,7 +118,10 @@ export const TEXT_LOCAL_BRANCH_UPDATED = "updated local branch";
 
 export const TEXT_VERSION_FILE_UPDATED = "updated version file";
 export const TEXT_VERSION_BRANCH_CREATED = "created version branch";
+export const TEXT_VERSION_BRANCH_COMMITTED = "committed version branch";
+export const TEXT_VERSION_BRANCH_PUSHED = "pushed version branch";
 export const TEXT_VERSION_BRANCH_SQUASHED = "squashed version branch";
+export const TEXT_CHANGED_CURRENT_BRANCH = "changed current branch";
 export const TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION =
   "merge branch before tag creation";
 export const TEXT_TAG_CREATED = "created tag";
