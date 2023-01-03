@@ -1,6 +1,7 @@
-import { runCommand } from "./shell.ts";
-
 import * as constants from "../constants.ts";
+
+import * as log from "../utils/log.ts";
+import { runCommand } from "./shell.ts";
 
 async function doesFileExist(fileName: string): Promise<boolean> {
   try {
@@ -11,12 +12,16 @@ async function doesFileExist(fileName: string): Promise<boolean> {
   }
 }
 
-async function updateVersionFiles(tagName: string, newTagName: string) {
+async function updateVersionFiles(
+  kind: string,
+  tagName: string,
+  newTagName: string,
+) {
   let filesUpdated = 0;
 
   filesUpdated += await updateVersionTsIfExists(tagName, newTagName);
   filesUpdated += await updatePackageJsonIfExists(newTagName);
-  filesUpdated += await updatePomFileIfExists(newTagName);
+  filesUpdated += await updatePomFileIfExists(kind, newTagName);
 
   return filesUpdated;
 }
@@ -32,6 +37,8 @@ async function updateVersionTsIfExists(tagName: string, newTagName: string) {
   versionContent = versionContent.replaceAll(tagName, newTagName);
 
   await Deno.writeTextFile(constants.VERSION_TS_FILENAME, versionContent);
+
+  log.task(constants.TEXT_VERSION_FILE_UPDATED);
 
   return 1;
 }
@@ -50,6 +57,10 @@ async function updatePackageJsonIfExists(newTagName: string) {
   if (changed === 0) {
     // Windows
     changed = await updatePackageFile(newTagName, true);
+  }
+
+  if (changed === 1) {
+    log.task(constants.TEXT_VERSION_FILE_UPDATED);
   }
 
   return changed;
@@ -80,7 +91,7 @@ async function updatePackageFile(
   return changed;
 }
 
-async function updatePomFileIfExists(newTagName: string) {
+async function updatePomFileIfExists(kind: string, newTagName: string) {
   let changed = 0;
 
   const isJava = await doesFileExist(constants.POM_XML_FILENAME);
@@ -89,11 +100,22 @@ async function updatePomFileIfExists(newTagName: string) {
     return changed;
   }
 
+  // Prefix
+  if (kind === constants.TEXT_STABLE) {
+    newTagName = `${constants.POM_RELEASE}-${newTagName}`;
+  } else {
+    newTagName = `${constants.POM_SNAPSHOT}-${newTagName}`;
+  }
+
   changed = await updatePomFile(newTagName);
 
   if (changed === 0) {
     // Windows
     changed = await updatePomFile(newTagName, true);
+  }
+
+  if (changed === 1) {
+    log.task(constants.TEXT_VERSION_FILE_UPDATED);
   }
 
   return changed;

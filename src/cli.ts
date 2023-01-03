@@ -10,62 +10,86 @@ import {
 import { addExtraOptionsIfNecessary } from "./utils/options.ts";
 
 import * as constants from "./constants.ts";
+import * as log from "./utils/log.ts";
 import * as git from "./utils/git.ts";
 import * as version from "./utils/version.ts";
 import * as files from "./utils/files.ts";
-import { printErrorMessage } from "./utils/shell.ts";
 
 export async function start() {
   // Flags
   const { "default-branch": defaultBranch } = parseFlags();
 
-  // Get status
-  const { branch, staged, remote } = await git.getStatus();
+  while (true) {
+    // Get status
+    const { branch, staged, remote } = await git.getStatus();
 
-  exitIfChangesUnstaged(staged);
+    exitIfChangesUnstaged(staged);
 
-  // Pull changes
-  await pullBranchIfUpstream(remote, defaultBranch);
+    // Pull changes
+    if (remote) {
+      const ok = await pullOrCheckoutDefaultBranch(defaultBranch);
 
-  // Get tag
-  const { tagName, local } = await getLatestTagAndSource(remote);
-  const kind = version.getKind(tagName);
+      if (ok === false) {
+        continue;
+      }
+    }
 
-  printTagName(tagName, kind, local);
+    // Get tag
+    const { tagName, local } = await getLatestTagAndSource(remote);
+    const kind = version.getKind(tagName);
 
-  // Ask kind
-  const newKind = await askVersionKind(branch, kind, defaultBranch);
+    printTagName(tagName, kind, local);
 
-  // Ask bump
-  const newTagName = await askVersionBump(
-    tagName,
-    kind,
-    newKind,
-  );
+    // Ask kind
+    const newKind = await askVersionKind(branch, kind, defaultBranch);
 
-  // Confirm new tag
-  const tagNameConfirmed: boolean = await confirmTagName(newTagName);
+    // Ask bump
+    const newTagName = await askVersionBump(
+      tagName,
+      kind,
+      newKind,
+    );
 
-  if (tagNameConfirmed === false) {
-    start();
-    return;
-  }
+    // Confirm new tag
+    const tagNameConfirmed = await confirmTagName(newTagName);
 
-  // Update version files
-  await updateVersionFilesIfExists(tagName, newTagName, local);
+    if (tagNameConfirmed === false) {
+      continue;
+    }
 
-  // Create tag
-  await git.createTag(newTagName);
+    // Update version files
+    const filesChanged = await updateVersionFilesIfExists(
+      kind,
+      tagName,
+      newTagName,
+      local,
+    );
 
-  if (local) {
-    return;
-  }
+    if (filesChanged > 0) {
+      await git.checkoutDefaultBranch(defaultBranch);
 
-  // Push tag
-  const tagPushConfirmed = await confirmTagPush(newTagName);
+      const ok = await mergeOrPullBranch(local, newTagName);
 
-  if (tagPushConfirmed) {
-    await git.pushTag();
+      if (ok === false) {
+        continue;
+      }
+    }
+
+    // Create tag
+    await git.createTag(newTagName);
+
+    if (local) {
+      return;
+    }
+
+    // Push tag
+    const tagPushConfirmed = await confirmTagPush(newTagName);
+
+    if (tagPushConfirmed) {
+      await git.pushTag();
+    }
+
+    break;
   }
 }
 
@@ -83,21 +107,13 @@ function exitIfChangesUnstaged(staged: boolean) {
     return;
   }
 
-  console.error(
-    constants.EMOJI_ERROR,
-    colors.bold.red(constants.TEXT_ERROR_CHANGES_UNSTAGED),
-  );
+  log.error(constants.TEXT_ERROR_CHANGES_UNSTAGED);
 
   Deno.exit(constants.EXIT_ERROR);
 }
 
-async function pullBranchIfUpstream(
-  remote: boolean,
-  defaultBranch: string | null,
-) {
-  if (remote === false) {
-    return;
-  }
+async function pullOrCheckoutDefaultBranch(defaultBranch: string | null) {
+  let ok = false;
 
   try {
     let output = await git.pullBranch();
@@ -107,38 +123,22 @@ async function pullBranchIfUpstream(
       return;
     }
 
-    console.info(
-      `${constants.EMOJI_TASK} ${constants.TEXT_LOCAL_BRANCH_UPDATED}`,
-    );
-  } catch (errorOutput) {
-    await switchBranchIfRemoteBranchNotFound(
-      errorOutput.message,
-      defaultBranch,
-    );
-    Deno.exit(constants.EXIT_ERROR);
-  }
-}
+    log.task(constants.TEXT_LOCAL_BRANCH_UPDATED);
 
-async function switchBranchIfRemoteBranchNotFound(
-  errorOutput: string,
-  defaultBranch: string | null,
-) {
-  // Remote branch not found
-  if (errorOutput.includes(constants.GIT_ERROR_NO_SUCH_REF_WAS_FETCHED)) {
-    console.warn(
-      `${constants.EMOJI_WARNING} ${constants.TEXT_REMOTE_BRANCH_NOT_FOUND}`,
-    );
+    ok = true;
+  } catch (error) {
+    const { message } = error;
 
-    await git.switchToDefaultBranch(defaultBranch);
+    if (message.includes(constants.GIT_ERROR_NO_SUCH_REF_WAS_FETCHED)) {
+      log.warn(constants.TEXT_REMOTE_BRANCH_NOT_FOUND);
+      await git.checkoutDefaultBranch(defaultBranch);
+      return ok;
+    }
 
-    console.info(
-      `${constants.EMOJI_TASK} ${constants.TEXT_CURRENT_BRANCH_UPDATED}`,
-    );
-
-    return;
+    log.error(error.message);
   }
 
-  printErrorMessage(constants.TEXT_EMPTY, errorOutput);
+  return ok;
 }
 
 async function getLatestTagAndSource(remote: boolean) {
@@ -286,6 +286,7 @@ async function confirmTagName(newTagName: string) {
 }
 
 async function updateVersionFilesIfExists(
+  kind: string,
   tagName: string,
   newTagName: string,
   local: boolean,
@@ -296,24 +297,59 @@ async function updateVersionFilesIfExists(
 
   newTagName = newTagName.replace(/^v/, constants.TEXT_EMPTY);
 
-  const filesChanged = await files.updateVersionFiles(tagName, newTagName);
+  const filesChanged = await files.updateVersionFiles(
+    kind,
+    tagName,
+    newTagName,
+  );
 
-  if (filesChanged > 0) {
-    await git.switchToNewBranch(newTagName);
+  if (filesChanged === 0) {
+    return filesChanged;
+  }
 
+  await git.switchToNewBranch(newTagName);
+  log.task(constants.TEXT_VERSION_BRANCH_CREATED);
+
+  await git.prepareCommit();
+  await git.createCommit(newTagName);
+
+  if (local === false) {
+    await git.pushCommit(newTagName);
+  }
+
+  return filesChanged;
+}
+
+async function mergeOrPullBranch(
+  local: boolean,
+  newTagName: string,
+) {
+  let ok = false;
+
+  if (local) {
+    await git.squashBranch(newTagName);
     await git.prepareCommit();
     await git.createCommit(newTagName);
 
-    if (local === false) {
-      await git.pushCommit(newTagName);
-    }
+    log.task(constants.TEXT_VERSION_BRANCH_SQUASHED);
 
-    console.info(
-      `${constants.EMOJI_INFORMATION} ${constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION}`,
-    );
-
-    Deno.exit(constants.EXIT_SUCCESS);
+    return true;
   }
+
+  log.info(constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION);
+  console.info(constants.TEXT_EMPTY);
+
+  ok = await Confirm.prompt(
+    constants.TEXT_CONFIRM_TAG_CREATION,
+  );
+
+  console.info(constants.TEXT_EMPTY);
+
+  if (ok) {
+    await git.pullBranch();
+  }
+
+  return ok;
 }
 
 async function confirmTagPush(newTagName: string) {

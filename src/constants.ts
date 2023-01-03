@@ -42,6 +42,8 @@ export const GIT_COMMAND_ARGUMENT_ADD_FILENAMES = ".";
 export const GIT_COMMAND_ARGUMENT_SWITCH = "switch";
 export const GIT_COMMAND_ARGUMENT_FORCE_CREATE = "--force-create";
 
+export const GIT_COMMAND_ARGUMENT_MERGE = "merge";
+export const GIT_COMMAND_ARGUMENT_SQUASH = "--squash";
 export const GIT_COMMAND_ARGUMENT_COMMIT = "commit";
 export const GIT_COMMAND_ARGUMENT_MESSAGE = "--message";
 export const GIT_COMMAND_ARGUMENT_TAG = "tag";
@@ -54,6 +56,8 @@ export const VERSION_PREFIX = "v";
 export const VERSION_TS_FILENAME = "version.ts";
 export const PACKAGE_JSON_FILENAME = "package.json";
 export const POM_XML_FILENAME = "pom.xml";
+export const POM_SNAPSHOT = "SNAPSHOT";
+export const POM_RELEASE = "RELEASE";
 
 export const NPM_COMMAND = "npm";
 
@@ -71,8 +75,8 @@ export const WINDOWS_COMMAND_BAT_SUFFIX = ".bat";
 // Emoji
 export const EMOJI_MESSAGE = "💬";
 export const EMOJI_TASK = "🟢";
-export const EMOJI_INFORMATION = "🟡";
-export const EMOJI_WARNING = "🟠";
+export const EMOJI_INFORMATION = "🟣";
+export const EMOJI_WARNING = "🟡";
 export const EMOJI_ERROR = "🔴";
 export const EMOJI_SHELL = "🐚";
 export const EMOJI_UNKNOWN = "🔨";
@@ -106,15 +110,20 @@ export const TEXT_MAJOR = "major";
 export const TEXT_MINOR = "minor";
 export const TEXT_PATCH = "patch";
 export const TEXT_CONFIRM_TAG_NAME = "Confirm tag name";
-
+export const TEXT_CONFIRM_TAG_CREATION = "Confirm tag creation";
 export const TEXT_CONFIRM_TAG_PUSH = "Confirm tag push";
 
 export const TEXT_LOCAL_BRANCH_NOT_FOUND = "local branch not found";
 export const TEXT_REMOTE_BRANCH_NOT_FOUND = "remote branch not found";
-export const TEXT_LOCAL_BRANCH_UPDATED = "local branch updated";
-export const TEXT_CURRENT_BRANCH_UPDATED = "current branch updated";
+export const TEXT_LOCAL_BRANCH_UPDATED = "updated local branch";
+
+export const TEXT_VERSION_FILE_UPDATED = "updated version file";
+export const TEXT_VERSION_BRANCH_CREATED = "created version branch";
+export const TEXT_VERSION_BRANCH_SQUASHED = "squashed version branch";
 export const TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION =
   "merge branch before tag creation";
+export const TEXT_TAG_CREATED = "created tag";
+export const TEXT_TAG_PUSHED = "pushed tag";
 export const TEXT_ERROR_NO_TAGS_FOUND = "no tags found";
 export const TEXT_ERROR_CHANGES_UNSTAGED =
   "changes unstaged, commit your local changes";
