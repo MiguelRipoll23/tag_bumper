@@ -1,5 +1,5 @@
-import { colors } from "../../deps.ts";
 import * as constants from "../constants.ts";
+import * as log from "../utils/log.ts";
 
 async function runCommand(
   commandName: string,
@@ -23,7 +23,7 @@ async function runCommand(
 
 function printErrorMessage(output: string, errorOutput: string) {
   const errorMessage = output.length > 0 ? output : errorOutput;
-  console.error(`${constants.EMOJI_ERROR} ${colors.bold.red(errorMessage)}`);
+  log.error(errorMessage);
 }
 
 export { printErrorMessage, runCommand };

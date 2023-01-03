@@ -1,4 +1,5 @@
 import * as constants from "../constants.ts";
+import * as log from "../utils/log.ts";
 
 import { printErrorMessage, runCommand } from "./shell.ts";
 
@@ -62,7 +63,7 @@ async function pullBranch() {
   throw new Error(errorOutput);
 }
 
-async function switchToDefaultBranch(defaultBranch: string | null) {
+async function checkoutDefaultBranch(defaultBranch: string | null) {
   const branchName = getDefaultBranch(defaultBranch);
 
   const { code, output, errorOutput } = await runCommand(
@@ -78,10 +79,7 @@ async function switchToDefaultBranch(defaultBranch: string | null) {
   }
 
   if (errorOutput.includes(constants.GIT_ERROR_NO_MATCH_KNOWN)) {
-    console.warn(
-      `${constants.EMOJI_ERROR} ${constants.TEXT_LOCAL_BRANCH_NOT_FOUND}`,
-    );
-
+    log.error(constants.TEXT_LOCAL_BRANCH_NOT_FOUND);
     Deno.exit(constants.EXIT_ERROR);
   }
 
@@ -185,6 +183,24 @@ async function switchToNewBranch(tagName: string) {
   Deno.exit(constants.EXIT_ERROR);
 }
 
+async function squashBranch(tagName: string) {
+  const { code, output, errorOutput } = await runCommand(
+    constants.GIT_COMMAND,
+    [
+      constants.GIT_COMMAND_ARGUMENT_MERGE,
+      constants.GIT_COMMAND_ARGUMENT_SQUASH,
+      constants.VERSION_PREFIX + tagName,
+    ],
+  );
+
+  if (code === 0) {
+    return;
+  }
+
+  printErrorMessage(output, errorOutput);
+  Deno.exit(constants.EXIT_ERROR);
+}
+
 async function prepareCommit() {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
@@ -202,13 +218,13 @@ async function prepareCommit() {
   Deno.exit(constants.EXIT_ERROR);
 }
 
-async function createCommit(targetVersion: string) {
+async function createCommit(tagName: string) {
   const { code, output, errorOutput } = await runCommand(
     constants.GIT_COMMAND,
     [
       constants.GIT_COMMAND_ARGUMENT_COMMIT,
       constants.GIT_COMMAND_ARGUMENT_MESSAGE,
-      constants.VERSION_PREFIX + targetVersion,
+      constants.VERSION_PREFIX + tagName,
     ],
   );
 
@@ -249,6 +265,7 @@ async function createTag(tagName: string) {
   );
 
   if (code === 0) {
+    log.task(constants.TEXT_TAG_CREATED);
     return;
   }
 
@@ -267,6 +284,7 @@ async function pushTag() {
   );
 
   if (code === 0) {
+    log.task(constants.TEXT_TAG_PUSHED);
     return;
   }
 
@@ -274,6 +292,7 @@ async function pushTag() {
 }
 
 export {
+  checkoutDefaultBranch,
   createCommit,
   createTag,
   getLatestTagFromLocal,
@@ -284,6 +303,6 @@ export {
   pullBranch,
   pushCommit,
   pushTag,
-  switchToDefaultBranch,
+  squashBranch,
   switchToNewBranch,
 };
