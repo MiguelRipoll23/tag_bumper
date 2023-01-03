@@ -79,7 +79,7 @@ async function switchToDefaultBranch(defaultBranch: string | null) {
 
   if (errorOutput.includes(constants.GIT_ERROR_NO_MATCH_KNOWN)) {
     console.warn(
-      `${constants.EMOJI_WARNING} ${constants.TEXT_LOCAL_BRANCH_NOT_FOUND}`,
+      `${constants.EMOJI_ERROR} ${constants.TEXT_LOCAL_BRANCH_NOT_FOUND}`,
     );
 
     Deno.exit(constants.EXIT_ERROR);

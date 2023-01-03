@@ -28,10 +28,10 @@ export async function start() {
   await pullBranchIfUpstream(remote, defaultBranch);
 
   // Get tag
-  const { tagName, remoteError } = await getLatestTagAndSource(remote);
+  const { tagName, local } = await getLatestTagAndSource(remote);
   const kind = version.getKind(tagName);
 
-  printTagName(tagName, kind, remoteError);
+  printTagName(tagName, kind, local);
 
   // Ask kind
   const newKind = await askVersionKind(branch, kind, defaultBranch);
@@ -52,12 +52,12 @@ export async function start() {
   }
 
   // Update version files
-  await updateVersionFilesIfExists(tagName, newTagName, remoteError);
+  await updateVersionFilesIfExists(tagName, newTagName, local);
 
   // Create tag
   await git.createTag(newTagName);
 
-  if (remoteError) {
+  if (local) {
     return;
   }
 
@@ -144,7 +144,7 @@ async function switchBranchIfRemoteBranchNotFound(
 async function getLatestTagAndSource(remote: boolean) {
   const result = {
     tagName: constants.TEXT_UNKNOWN,
-    remoteError: false,
+    local: true,
   };
 
   if (remote) {
@@ -152,10 +152,11 @@ async function getLatestTagAndSource(remote: boolean) {
       const remoteTag = await git.getLatestTagFromRemote();
 
       result.tagName = remoteTag;
+      result.local = false;
 
       return result;
     } catch (_error) {
-      result.remoteError = true;
+      result.local = true;
     }
   }
 
@@ -168,12 +169,12 @@ async function getLatestTagAndSource(remote: boolean) {
 function printTagName(
   tagName: string,
   kind: string,
-  remoteError: boolean,
+  local: boolean,
 ) {
-  let local = "";
+  let localText = "";
 
-  if (remoteError) {
-    local = colors.bold.yellow(constants.TEXT_LOCAL);
+  if (local) {
+    localText = colors.bold.yellow(constants.TEXT_LOCAL);
   }
 
   console.info(constants.TEXT_EMPTY);
@@ -181,7 +182,7 @@ function printTagName(
   console.info(
     colors.bold(constants.TEXT_LATEST_TAG),
     colors.bold.blue(version.formatWithEmoji(tagName, kind)),
-    local,
+    localText,
   );
 
   console.info(constants.TEXT_EMPTY);
@@ -287,7 +288,7 @@ async function confirmTagName(newTagName: string) {
 async function updateVersionFilesIfExists(
   tagName: string,
   newTagName: string,
-  remoteError: boolean,
+  local: boolean,
 ) {
   // Check if changes pending
   const { staged } = await git.getStatus();
@@ -303,13 +304,15 @@ async function updateVersionFilesIfExists(
     await git.prepareCommit();
     await git.createCommit(newTagName);
 
-    if (remoteError === false) {
+    if (local === false) {
       await git.pushCommit(newTagName);
     }
 
     console.info(
       `${constants.EMOJI_INFORMATION} ${constants.TEXT_MERGE_BRANCH_BEFORE_TAG_CREATION}`,
     );
+
+    Deno.exit(constants.EXIT_SUCCESS);
   }
 }
 
