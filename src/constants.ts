@@ -1,5 +1,6 @@
 // Exit codes
 export const EXIT_ERROR = -1;
+export const EXIT_SUCCESS = 0;
 
 // Configuration
 export const ARG_DEFAULT_BRANCH = "default-branch";
