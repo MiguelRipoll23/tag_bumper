@@ -62,6 +62,7 @@ async function pullBranch() {
     }
 
     log.task(constants.TEXT_LOCAL_BRANCH_UPDATED);
+    return;
   }
 
   throw new Error(errorOutput);
