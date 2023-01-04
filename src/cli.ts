@@ -340,7 +340,12 @@ async function mergeOrPullBranch(
   console.info(constants.TEXT_EMPTY);
 
   if (ok) {
-    await git.pullBranch();
+    try {
+      await git.pullBranch();
+    } catch (error) {
+      const { message } = error;
+      log.error(message);
+    }
   }
 
   return ok;
