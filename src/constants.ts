@@ -114,6 +114,8 @@ export const TEXT_CONFIRM_TAG_PUSH = "Confirm tag push";
 
 export const TEXT_LOCAL_BRANCH_NOT_FOUND = "local branch not found";
 export const TEXT_REMOTE_BRANCH_NOT_FOUND = "remote branch not found";
+export const TEXT_LOCAL_BRANCH_NO_PENDING_CHANGES = "no pending changes";
+export const TEXT_LOCAL_BRANCH_UP_TO_DATE = "up to date";
 export const TEXT_LOCAL_BRANCH_UPDATED = "updated local branch";
 
 export const TEXT_VERSION_FILE_UPDATED = "updated version file";

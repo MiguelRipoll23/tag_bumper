@@ -30,6 +30,7 @@ async function getStatus() {
   let staged = false;
 
   if (output.includes(constants.GIT_CHANGES_NOT_STAGED) == false) {
+    log.info(constants.TEXT_LOCAL_BRANCH_NO_PENDING_CHANGES);
     staged = true;
   }
 
@@ -58,6 +59,7 @@ async function pullBranch() {
 
   if (code === 0) {
     if (output.toLowerCase().includes(constants.GIT_ALREADY_UP_TO_DATE)) {
+      log.info(constants.TEXT_LOCAL_BRANCH_UP_TO_DATE);
       return;
     }
 
